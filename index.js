@@ -3,12 +3,10 @@ function readUntil (array, keywords) {
     keywords = [keywords]
   }
   let value = ''
-  while (array.length && keywords.indexOf(array[0]) === -1) {
-    value += array.shift()
-    array.offset += 1
+  while (array.offset < array.length && keywords.indexOf(array[array.offset]) === -1) {
+    value += array[array.offset++]
   }
-  array.shift()
-  array.offset += 1
+  array.offset++
   return value
 }
 
@@ -148,11 +146,11 @@ function unserializer (text) {
     try {
       Object.assign(result, read(array))
     } catch (err) {
-      err.message += ', Left text: "' + array.join('') + '"'
+      err.message += ', Left text: "' + array.slice(array.offset).join('') + '"'
       throw err
     }
   }
-  while (array.length)
+  while (array.offset < array.length)
   return result
 }
 
